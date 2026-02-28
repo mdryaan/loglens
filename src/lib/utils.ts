@@ -1,10 +1,18 @@
-import type { ClassValue } from "clsx";
+type ClassEntry = string | undefined | null | false | 0 | Record<string, boolean>;
 
-export function cn(...classes: ClassValue[]): string {
-  return classes
-    .flat()
-    .filter(Boolean)
-    .join(" ");
+export function cn(...classes: ClassEntry[]): string {
+  const result: string[] = [];
+  for (const c of classes) {
+    if (!c) continue;
+    if (typeof c === "string") {
+      result.push(c);
+    } else if (typeof c === "object") {
+      for (const [key, val] of Object.entries(c)) {
+        if (val) result.push(key);
+      }
+    }
+  }
+  return result.join(" ");
 }
 
 export function generateId(): string {

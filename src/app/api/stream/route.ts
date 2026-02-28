@@ -31,17 +31,18 @@ export function GET(req: NextRequest) {
     const logInterval = setInterval(emitLog, 800 + Math.random() * 400);
     const heartbeatInterval = setInterval(heartbeat, 15000);
 
-    req.signal.addEventListener("abort", () => {
-      stopped = true;
-      clearInterval(logInterval);
-      clearInterval(heartbeatInterval);
-      close();
-    });
-
-    return () => {
+    const cleanup = () => {
+      if (stopped) return;
       stopped = true;
       clearInterval(logInterval);
       clearInterval(heartbeatInterval);
     };
+
+    req.signal.addEventListener("abort", () => {
+      cleanup();
+      close();
+    });
+
+    return cleanup;
   });
 }

@@ -12,6 +12,8 @@ export function useAutoScroll(
   deps: unknown[],
 ): UseAutoScrollReturn {
   const containerRef = useRef<HTMLDivElement>(null);
+  const enabledRef = useRef(enabled);
+  enabledRef.current = enabled;
 
   const scrollToBottom = useCallback(() => {
     const el = containerRef.current;
@@ -20,9 +22,10 @@ export function useAutoScroll(
   }, []);
 
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabledRef.current) return;
     scrollToBottom();
-  }, [enabled, scrollToBottom, ...deps]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scrollToBottom, ...deps]);
 
   return { containerRef, scrollToBottom };
 }

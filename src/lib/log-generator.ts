@@ -72,9 +72,18 @@ const ACCESS_MESSAGES: string[] = [
 ];
 
 let counter = 0;
+const idBuffer: string[] = [];
 
 function generateId(): string {
+  if (idBuffer.length > 0) return idBuffer.pop()!;
   return `log_${Date.now()}_${++counter}`;
+}
+
+function prefillIdBuffer(): void {
+  const ts = Date.now();
+  for (let i = 0; i < 20; i++) {
+    idBuffer.push(`log_${ts}_${++counter}`);
+  }
 }
 
 function pickRandom<T>(arr: T[]): T {

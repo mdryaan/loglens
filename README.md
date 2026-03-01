@@ -16,9 +16,9 @@ Stream, filter, search, and export application logs with a terminal-style UI —
 ![LogLens Screenshot](docs/screenshot-main.png)
 
 | Stream View | Filter Panel |
-|---|---|
+|:---:|:---:|
 | ![Stream](docs/screenshot-stream.png) | ![Filter](docs/screenshot-filter.png) |
-| Search & Highlight | Export |
+| **Search & Highlight** | **Export** |
 | ![Search](docs/screenshot-search.png) | ![Export](docs/screenshot-export.png) |
 
 ---

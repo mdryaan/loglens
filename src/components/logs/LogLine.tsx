@@ -3,19 +3,18 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { LogBadge } from "./LogBadge";
-import { LEVEL_ROW_HIGHLIGHT, SOURCE_COLORS } from "@/constants/colors";
+import { SOURCE_COLORS } from "@/constants/colors";
 import { formatTimestamp, relativeTime } from "@/lib/log-parser";
 import type { LogLine as LogLineType } from "@/types/log";
 
 interface LogLineProps {
   log: LogLineType;
-  searchQuery: string;
   onCopy: (text: string) => void;
   isCopied: boolean;
   highlight: (text: string) => Array<{ text: string; highlighted: boolean }>;
 }
 
-export function LogLine({ log, searchQuery, onCopy, isCopied, highlight }: LogLineProps) {
+export function LogLine({ log, onCopy, isCopied, highlight }: LogLineProps) {
   const [hovered, setHovered] = useState(false);
 
   const handleCopy = () => {
@@ -27,25 +26,29 @@ export function LogLine({ log, searchQuery, onCopy, isCopied, highlight }: LogLi
   return (
     <div
       className={cn(
-        "group flex items-start gap-2 px-3 py-1 text-xs font-mono border-b border-terminal-border/40 cursor-pointer transition-colors animate-fade-in",
-        LEVEL_ROW_HIGHLIGHT[log.level],
-        hovered && "bg-terminal-border/30",
+        "flex items-center gap-0 px-3 h-7 text-xs font-mono border-b border-terminal-border/30 cursor-pointer transition-colors select-none",
+        hovered ? "bg-white/[0.04]" : "bg-transparent",
       )}
       onClick={handleCopy}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <span className="text-terminal-muted shrink-0 w-16 tabular-nums leading-5">
+      <span className="text-terminal-muted/70 shrink-0 w-[72px] tabular-nums">
         {formatTimestamp(log.timestamp)}
       </span>
-      <LogBadge level={log.level} />
-      <span className={cn("shrink-0 w-12 leading-5 text-[10px]", SOURCE_COLORS[log.source])}>
+
+      <span className="shrink-0 w-[58px]">
+        <LogBadge level={log.level} />
+      </span>
+
+      <span className={cn("shrink-0 w-[52px] text-[10px] font-medium", SOURCE_COLORS[log.source])}>
         {log.source}
       </span>
-      <span className="flex-1 text-terminal-text leading-5 break-all">
+
+      <span className="flex-1 text-terminal-text min-w-0 truncate">
         {parts.map((part, i) =>
           part.highlighted ? (
-            <mark key={i} className="bg-yellow-400/30 text-yellow-200 rounded-sm px-0.5">
+            <mark key={i} className="bg-yellow-400/25 text-yellow-200 rounded-sm px-0.5">
               {part.text}
             </mark>
           ) : (
@@ -53,12 +56,15 @@ export function LogLine({ log, searchQuery, onCopy, isCopied, highlight }: LogLi
           ),
         )}
       </span>
-      <span className="shrink-0 text-[10px] text-terminal-muted/60 leading-5 tabular-nums w-14 text-right">
+
+      <span className="shrink-0 w-[56px] text-right text-[10px] text-terminal-muted/50 tabular-nums pl-2">
         {isCopied ? (
-          <span className="text-emerald-400">copied</span>
-        ) : hovered ? (
-          <span className="text-terminal-muted">{relativeTime(log.timestamp)}</span>
-        ) : null}
+          <span className="text-emerald-400">copied!</span>
+        ) : (
+          <span className={hovered ? "opacity-100" : "opacity-0"}>
+            {relativeTime(log.timestamp)}
+          </span>
+        )}
       </span>
     </div>
   );

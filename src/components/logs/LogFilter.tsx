@@ -21,13 +21,12 @@ export function LogFilter({ activeLevels, onToggle }: LogFilterProps) {
             key={level}
             onClick={() => onToggle(level)}
             className={cn(
-              "inline-flex items-center gap-1 rounded px-2 py-0.5 text-[10px] font-mono font-semibold border transition-all",
+              "inline-flex items-center justify-center rounded px-1.5 py-0.5 text-[10px] font-bold border font-mono w-[46px] transition-opacity",
               active
                 ? cn(colors.bg, colors.text, colors.border)
-                : "bg-transparent text-terminal-muted border-terminal-border/50 opacity-50 hover:opacity-75",
+                : "bg-terminal-surface text-terminal-muted border-terminal-border/50 opacity-40 hover:opacity-70",
             )}
           >
-            <span className={cn("w-1 h-1 rounded-full", active ? colors.dot : "bg-terminal-muted")} />
             {level}
           </button>
         );

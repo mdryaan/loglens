@@ -9,12 +9,17 @@ import { useClipboard } from "@/hooks/useClipboard";
 import { LogToolbar } from "./LogToolbar";
 import { LogLine } from "./LogLine";
 import { LogStats } from "./LogStats";
-import type { LogSource } from "@/types/log";
+import { formatTimestamp } from "@/lib/log-parser";
+import type { LogLine as LogLineType, LogSource } from "@/types/log";
 import type { StreamStatus } from "@/types/stream";
 
 interface LogViewerProps {
   source: LogSource;
   onStatusChange?: (status: StreamStatus) => void;
+}
+
+function copyKey(log: LogLineType): string {
+  return `[${formatTimestamp(log.timestamp)}] [${log.level}] [${log.source}] ${log.message}`;
 }
 
 export function LogViewer({ source, onStatusChange }: LogViewerProps) {
@@ -60,12 +65,9 @@ export function LogViewer({ source, onStatusChange }: LogViewerProps) {
         status={status}
       />
 
-      <div
-        ref={containerRef}
-        className="flex-1 overflow-y-auto min-h-0 bg-terminal-bg"
-      >
+      <div ref={containerRef} className="flex-1 overflow-y-auto min-h-0 bg-terminal-bg">
         {visibleLogs.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-32 text-terminal-muted text-xs font-mono">
+          <div className="flex items-center justify-center h-32 text-terminal-muted text-xs font-mono">
             {paused ? "Stream paused — resume to receive logs" : "Waiting for logs..."}
           </div>
         ) : (
@@ -73,12 +75,8 @@ export function LogViewer({ source, onStatusChange }: LogViewerProps) {
             <LogLine
               key={log.id}
               log={log}
-              searchQuery={query}
               onCopy={copy}
-              isCopied={
-                copiedId ===
-                `[${log.timestamp}] [${log.level}] [${log.source}] ${log.message}`
-              }
+              isCopied={copiedId === copyKey(log)}
               highlight={highlight}
             />
           ))

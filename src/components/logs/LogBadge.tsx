@@ -12,14 +12,13 @@ export function LogBadge({ level, className }: LogBadgeProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-semibold border font-mono shrink-0",
+        "inline-flex items-center justify-center gap-1 rounded px-1.5 py-0.5 text-[10px] font-bold border font-mono w-[46px]",
         colors.bg,
         colors.text,
         colors.border,
         className,
       )}
     >
-      <span className={cn("w-1 h-1 rounded-full", colors.dot)} />
       {level}
     </span>
   );
